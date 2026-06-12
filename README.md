@@ -1,120 +1,104 @@
 # AXIA ISP Management Suite
 
-Connecteur bidirectionnel **Odoo 18 LTS ↔ Splynx** pour 4 marques télécom (XIWO, WEELAX, COQLA, GLOBALGRID). Odoo devient la plateforme métier maîtresse (commercial, facturation, règles métier, audit) ; Splynx reste l'exécutant technique réseau (PPPoE, RADIUS, monitoring).
-
-**Statut** : handoff-ready pour Chantier 0. Reste à compléter les `[TBD - Kelvin]` du brief commun (repo URL, contacts, accès Splynx) avant remise au prestataire de développement externe.
+Connecteur bidirectionnel **Odoo 18 LTS ↔ Splynx** pour 4 marques télécom (XIWO, WEELAX, COQLA, GLOBALGRID). Odoo devient la plateforme métier maîtresse — commercial, facturation, règles de suspension, calendaires multi-pays, audit 5 ans. Splynx reste l'exécutant technique réseau (PPPoE, RADIUS, monitoring).
 
 ---
 
-## Arborescence
+## Par où commencer
+
+Lisez dans cet ordre :
+
+1. **`brief-main.md`** — Conventions transverses, stack figée, onboarding développeur, Definition of Done, procédure d'amendement architecture, ressources & contacts. **À lire en premier**, et à garder en référence permanente pour tous les chantiers.
+
+2. **`briefs/brief-axia-isp-chantier-<N>.md`** — Brief du chantier sur lequel vous démarrez. Contient le scope, l'acceptance globale, les stories, et la liste des tests d'acceptation attendus.
+
+3. **`architecture.md`** — Architecture canonique du projet : 10 décisions d'architecture (ADR) figées, scaffold des modules Odoo, patterns d'implémentation, frontières de données, flux d'intégration. Référence permanente.
+
+4. **`specs/`** — Contrat sémantique du projet :
+   - `SPEC.md` — capacités métier (CAP-1 à CAP-15), contraintes, non-goals
+   - `admin-parameters.md` — paramètres métier éditables sans code
+   - `field-mappings.md` — matrice des correspondances de champs Odoo ↔ Splynx
+   - `service-states.md` — machine d'états des statuts contractuels
+   - `sync-ownership.md` — matrice de propriété par champ (Odoo-owned vs Splynx-owned)
+   - `acceptance-scenarios.md` — scénarios d'acceptation E2E (Given/When/Then)
+   - `glossary.md` — glossaire métier ISP
+
+---
+
+## Structure du repo
 
 ```
-splynx-odoo/
-├── _bmad/                        # Configuration BMad Method (skills, scripts)
-├── _bmad-output/                 # 🎯 Tous les artefacts produits (livrables + planning)
-│   ├── planning-artifacts/        # CDC, PRD, architecture, epics, readiness report
-│   ├── specs/                     # SPEC + companions (contrat sémantique)
-│   ├── implementation-artifacts/  # Briefs handoff par chantier (le package à livrer)
-│   └── test-artifacts/            # Tests d'acceptation ATDD red-phase
-├── inputs/                       # Fichiers source internes (PDFs, spécifications client)
-├── docs/ + docs-projet/          # Documentation projet
-├── *.pdf                         # PDFs sources internes (CDC consolidés)
-└── README.md                     # (ce document)
+ax-odoo/
+├── README.md             # Ce document
+├── brief-main.md         # Brief commun (à lire en premier)
+├── architecture.md       # Architecture canonique (10 ADR figés)
+├── briefs/               # Briefs chantier par chantier
+│   ├── brief-axia-isp-chantier-0.md
+│   ├── brief-axia-isp-chantier-1.md
+│   ├── brief-axia-isp-chantier-2.md
+│   ├── brief-axia-isp-chantier-3.md
+│   └── brief-axia-isp-chantier-4.md
+└── specs/                # SPEC + 6 companions (contrat sémantique)
+    ├── SPEC.md
+    ├── admin-parameters.md
+    ├── field-mappings.md
+    ├── service-states.md
+    ├── sync-ownership.md
+    ├── acceptance-scenarios.md
+    └── glossary.md
 ```
 
 ---
 
-## Pour le prestataire de développement externe
+## Méthode de livraison
 
-Le **package handoff** à transmettre se compose des fichiers suivants (PAS le repo entier — uniquement ce qui suit) :
-
-```
-📦 Package handoff Chantier N
-├── _bmad-output/implementation-artifacts/briefs/
-│   ├── brief-axia-isp-commun.md             # À lire en premier
-│   └── brief-axia-isp-chantier-N.md         # Chantier en cours uniquement
-├── _bmad-output/planning-artifacts/architecture.md   # Architecture canonique (10 ADR)
-├── _bmad-output/specs/spec-axia-isp/                 # Contrat sémantique
-│   ├── SPEC.md
-│   ├── admin-parameters.md
-│   ├── field-mappings.md
-│   ├── service-states.md
-│   ├── sync-ownership.md
-│   ├── acceptance-scenarios.md
-│   └── glossary.md
-└── _bmad-output/test-artifacts/atdd-chantier-N/      # Tests red-phase
-```
-
-**Documents à NE PAS transmettre** (internes) : `inputs/`, PDFs racine, `_bmad-output/planning-artifacts/cahier-des-charges/`, `_bmad-output/planning-artifacts/prds/`, `_bmad-output/planning-artifacts/research/`.
-
-Chaque chantier est livré séquentiellement : Chantier 0 → 1 → 2 → 3 → 4. Le brief Chantier N+1 + ses tests ATDD sont remis après acceptation et sign-off du Chantier N.
-
----
-
-## État du projet
-
-### Phase 1 — Planning (terminée)
-
-| Artefact | Statut | Localisation |
-|---|---|---|
-| Cahier des charges v2 | ✅ | `_bmad-output/planning-artifacts/cahier-des-charges/cdc-axia-isp-2026-05-27-v2.md` |
-| PRD v2 + addendum + reviews | ✅ | `_bmad-output/planning-artifacts/prds/prd-axia-isp-2026-05-27/` |
-| Architecture (10 ADR, 7 modules) | ✅ figée | `_bmad-output/planning-artifacts/architecture.md` |
-| SPEC + 6 companions | ✅ | `_bmad-output/specs/spec-axia-isp/` |
-| Epics + 82 stories | ✅ | `_bmad-output/planning-artifacts/epics.md` |
-| Readiness Report | ✅ verdict READY | `_bmad-output/planning-artifacts/implementation-readiness-report-2026-06-11.md` |
-
-### Phase 2 — Handoff (en cours)
-
-| Artefact | Statut | Localisation |
-|---|---|---|
-| Brief commun + 5 briefs chantier | ✅ | `_bmad-output/implementation-artifacts/briefs/` |
-| Tests d'acceptation ATDD Chantier 0 | ✅ 76 tests | `_bmad-output/test-artifacts/atdd-chantier-0/` |
-| Tests d'acceptation ATDD Chantier 1 | ✅ 65 tests | `_bmad-output/test-artifacts/atdd-chantier-1/` |
-| Tests d'acceptation ATDD Chantier 2 | ✅ 25 tests | `_bmad-output/test-artifacts/atdd-chantier-2/` |
-| Tests d'acceptation ATDD Chantiers 3+4 | ⏸️ À produire | — |
-| Compléter `[TBD - Kelvin]` brief commun §8 | 🟡 À faire | repo URL, contacts, accès Splynx |
-| Préparer canal sécurisé pour tokens Splynx | 🟡 À faire | Bitwarden / 1Password share |
-
-### Phase 3 — Implémentation (à venir)
-
-Démarre après remise du package Chantier 0 au prestataire externe. Cadence : 1 chantier à la fois, sign-off explicite Kelvin avant passage au suivant.
+Le projet est découpé en **5 chantiers livrés séquentiellement** :
 
 | Chantier | Objet | Stories | Effort estimé |
 |---|---|---|---|
-| 0 — Fondations | Bootstrap + audit + RBAC + POC Splynx + CI | 10 | ~35 j dev |
-| 1 — Sync Odoo ↔ Splynx | Connecteur bidirectionnel | 23 | ~76 j dev |
-| 2 — PPP & actions techniques | Gestion PPP + suspend/réactiver | 14 | ~38 j dev |
-| 3 — Workflow impayés | Automatisation impayés multi-pays | 20 | ~55 j dev |
-| 4 — Production-ready ops | Observabilité + RGPD + WORM | 15 | ~42 j dev |
+| 0 — Fondations (Sprint 0) | Bootstrap, audit, RBAC, POC Splynx, CI | 10 | ~35 j |
+| 1 — Synchronisation Odoo ↔ Splynx | Connecteur bidirectionnel | 23 | ~76 j |
+| 2 — PPP & actions techniques | Gestion PPP + suspend/réactiver | 14 | ~38 j |
+| 3 — Workflow impayés & billing | Automatisation impayés multi-pays | 20 | ~55 j |
+| 4 — Production-ready ops | Observabilité + archivage + RGPD | 15 | ~42 j |
+
+**Discipline** :
+- 1 seul chantier à la fois.
+- Le chantier N doit être accepté et signé-off avant démarrage du chantier N+1.
+- Le brief du chantier suivant + la suite de tests d'acceptation correspondante vous sont remis après acceptation du précédent.
+
+**Tests d'acceptation** : pour chaque chantier, une suite de tests **red-phase** (initialement rouges) vous est transmise en même temps que le brief. Votre travail : implémenter le code pour que ces tests passent au vert sans modifier leurs assertions. Cette suite constitue le contrat dur de livraison.
 
 ---
 
-## Conventions internes
+## Stack imposée
 
-- **Stack figée** : Odoo 18 LTS + PostgreSQL 15 + Redis + OCA `connector`/`queue_job`/`keychain` + Docker on-premise.
-- **Multi-company natif** (4 marques étanches), code agnostique au mode pour bascule multi-DB triviale si DPO l'impose.
-- **Audit 5 ans glissants** avec archivage S3 WORM (Object Lock 5 ans).
-- **PPP généré par Odoo** (CDC v2 inverse v1) — Splynx applique.
-- **Aucune suppression physique** côté Splynx (résiliation = `terminated`).
+- Odoo Community 18 LTS + PostgreSQL 15 + Redis 7
+- Modules OCA : `connector`, `queue_job`, `keychain`
+- Client HTTP sortant : `httpx` (wrapper minimal custom)
+- Calendaires : `python-holidays`
+- Tests : `pytest-odoo`
+- Déploiement : Docker + Docker Compose (on-premise)
+- Observabilité (Chantier 4) : Prometheus + Loki + Sentry
+- Stockage archivage immuable (Chantier 4) : S3 + Object Lock
 
----
-
-## Travailler sur ce projet avec un agent IA
-
-Le projet est instrumenté pour [BMad Method](https://docs.bmad-method.org/) et utilisable via Claude Code, Cursor ou équivalent. Les agents persistants disponibles :
-
-- **Winston** (System Architect) — `bmad-agent-architect`
-- **Paige** (Technical Writer) — `bmad-agent-tech-writer`
-- **John** (Product Manager) — `bmad-agent-pm`
-- **Mary** (Business Analyst) — `bmad-agent-analyst`
-- **Amelia** (Developer) — `bmad-agent-dev`
-- **Sally** (UX Designer) — `bmad-agent-ux-designer`
-- **Murat** (Test Architect) — `bmad-tea`
-
-Mémoire persistante des décisions et conventions dans `~/.claude/projects/-Users-mac-Documents-projects-splynx-odoo/memory/`.
+Détails complets et versions à pinner dans `brief-main.md` §3 et `architecture.md`.
 
 ---
 
-**Propriétaire projet** : Kelvin
-**Date de dernière mise à jour** : 2026-06-12
+## Règles principales
+
+- **Architecture figée.** Toute déviation des 10 ADR nécessite un ADR-amendment validé. Procédure documentée dans `brief-main.md` §7.
+- **Multi-company natif** (4 marques étanches), avec code agnostique au mode de cloisonnement.
+- **Audit 5 ans glissants** avec archivage immuable (S3 Object Lock WORM).
+- **Génération PPP côté Odoo** — Splynx applique (pas l'inverse).
+- **Aucune suppression physique** côté Splynx (résiliation = statut `terminated`).
+- **Aucun secret en clair** en base, en log, en variable d'environnement non chiffrée, ou en repo.
+
+---
+
+## Contact
+
+Coordonnées du propriétaire produit et procédure de communication détaillées dans `brief-main.md` §8.
+
+Toute question de scope ou d'interprétation doit être posée en sync hebdo **avant** d'écrire la première ligne de code de la story concernée — pas d'interprétation silencieuse.
