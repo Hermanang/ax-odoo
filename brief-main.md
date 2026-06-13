@@ -53,7 +53,7 @@ Avec ce brief, tu reçois les documents suivants. **Mis ensemble, ils forment ta
 
 ### 2.1 Pitch
 
-AXIA ISP Management Suite **centralise dans Odoo 18 LTS** la gestion commerciale et la décision métier de 4 marques télécom — **XIWO, WEELAX, COQLA, GLOBALGRID** — en synchronisant bidirectionnellement avec **4 instances Splynx** isolées (l'OSS/BSS réseau qui exécute PPPoE, RADIUS et coupures techniques).
+AXIA ISP Management Suite **centralise dans Odoo 18 LTS** la gestion commerciale et la décision métier de 4 marques télécom — **Marque A, Marque B, Marque C, Marque D** — en synchronisant bidirectionnellement avec **4 instances Splynx** isolées (l'OSS/BSS réseau qui exécute PPPoE, RADIUS et coupures techniques).
 
 > **Principe directeur** : *Odoo décide, Splynx exécute.* Toute décision métier (création client conditionnelle, suspension impayé, réactivation, résiliation) prend racine dans Odoo. Splynx remonte uniquement les états techniques. En gros : Odoo est le cerveau, Splynx les bras.
 
@@ -200,7 +200,7 @@ Les noms exacts sont au dev — listés dans `.env.example` que tu produiras en 
 | Branche feature | par story, format au choix (suggestion : `feat/E{chantier}-S{story}-<slug>`) |
 | Commits | Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `test:`) |
 | PR | 1 PR par story, lien story en description, **DoD checklist obligatoire** (template §5.2) |
-| Reviewers | ≥ 1 pair côté dev externe + sign-off Kelvin sur acceptance chantier |
+| Reviewers | ≥ 1 pair côté dev externe + sign-off du propriétaire produit sur acceptance chantier |
 | CI | Toutes les checks vertes obligatoires avant merge |
 
 ### 4.5 Tests locaux
@@ -347,16 +347,16 @@ Crée `docs/adr/ADR-XXX-amendment-<slug>.md` :
 <ce que tu as essayé, pourquoi ça ne marche pas>
 
 ## Sign-off requis
-- [ ] Kelvin (décideur produit + architecte interne)
+- [ ] Le propriétaire produit (décideur produit + architecte interne)
 - [ ] Reviewer pair côté dev externe
 ```
 
 ### 7.3 Workflow d'approbation
 
 1. PR draft avec l'ADR-amendment + preuve du blocage (logs, bench, reproduce steps).
-2. Mention Kelvin en reviewer.
+2. Mention du propriétaire produit en reviewer.
 3. Discussion en sync hebdo si non-trivial.
-4. Décision finale Kelvin sous 72 h ouvrées.
+4. Décision finale du propriétaire produit sous 72 h ouvrées.
 5. Si accepté : merge l'ADR-amendment **avant** modification de code applicatif.
 6. Si rejeté : implémenter selon ADR initial. Le rejet est tracé.
 
@@ -368,25 +368,25 @@ Si tu trouves une contradiction entre ce brief commun, le brief de chantier, et 
 
 ## 8. Ressources & contacts
 
-> 🟡 Cette section contient des `[TBD - Kelvin]` à compléter **avant remise** au prestataire. Certains champs seront vides quand tu liras ce document pour la première fois, c'est normal — ils seront remplis avant le premier commit.
+> 🟡 Cette section contient des `[TBD]` à compléter **avant remise** au prestataire. Certains champs seront vides quand tu liras ce document pour la première fois, c'est normal — ils seront remplis avant le premier commit.
 
 ### 8.1 Repo & artefacts
 
 | Ressource | URL / chemin |
 |---|---|
-| Repo principal | `[TBD - Kelvin]` |
-| Registre Docker (images release) | `[TBD - Kelvin]` |
-| Bucket S3 archivage WORM (Chantier 4) | `[TBD - Kelvin]` |
-| Dashboard projet (Linear / Jira / GitHub Projects) | `[TBD - Kelvin]` |
+| Repo principal | `[TBD]` |
+| Registre Docker (images release) | `[TBD]` |
+| Bucket S3 archivage WORM (Chantier 4) | `[TBD]` |
+| Dashboard projet (Linear / Jira / GitHub Projects) | `[TBD]` |
 
 ### 8.2 Accès Splynx (Chantier 0 — POC payloads)
 
 | Tenant | URL | Compte API dédié | Canal transmission token sécurisé |
 |---|---|---|---|
-| XIWO | `[TBD]` | `[TBD]` | Bitwarden / 1Password share |
-| WEELAX | `[TBD]` | `[TBD]` | idem |
-| COQLA | `[TBD]` | `[TBD]` | idem |
-| GLOBALGRID | `[TBD]` | `[TBD]` | idem |
+| Marque A | `[TBD]` | `[TBD]` | Bitwarden / 1Password share |
+| Marque B | `[TBD]` | `[TBD]` | idem |
+| Marque C | `[TBD]` | `[TBD]` | idem |
+| Marque D | `[TBD]` | `[TBD]` | idem |
 
 **Les tokens ne sont jamais transmis par email/Slack/Discord en clair.** Canal sécurisé obligatoire.
 
@@ -394,7 +394,7 @@ Si tu trouves une contradiction entre ce brief commun, le brief de chantier, et 
 
 | Rôle | Personne | Canal | Pour quoi |
 |---|---|---|---|
-| Décideur produit + architecte interne | Kelvin | `[TBD - email]` + sync hebdo | Décisions ADR-amendment, validation acceptance, levée blocages |
+| Décideur produit + architecte interne | Le propriétaire produit | `[TBD - email]` + sync hebdo | Décisions ADR-amendment, validation acceptance, levée blocages |
 | Tech lead côté dev externe | `[TBD]` | `[TBD]` | Coordination interne équipe |
 | Support Splynx (bug API tenant) | `[TBD]` | `[TBD]` | Bugs spécifiques tenants |
 
@@ -412,8 +412,8 @@ Si tu trouves une contradiction entre ce brief commun, le brief de chantier, et 
 Un chantier est **officiellement accepté** uniquement après :
 
 1. ✅ Tous les critères d'acceptance globale du chantier validés sur env staging.
-2. ✅ Démo réalisée devant Kelvin.
-3. ✅ Sign-off écrit Kelvin sur la PR finale du chantier (commentaire `LGTM — Chantier N accepté`).
+2. ✅ Démo réalisée devant le propriétaire produit.
+3. ✅ Sign-off écrit du propriétaire produit sur la PR finale du chantier (commentaire `LGTM — Chantier N accepté`).
 4. ✅ Aucune issue critical ni major ouverte sur le scope du chantier.
 
 À partir de ce sign-off, le périmètre du chantier devient figé (modifications via ADR-amendment uniquement). Le chantier N+1 démarre et son brief te sera remis. Le cycle recommence !

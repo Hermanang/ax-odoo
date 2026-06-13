@@ -39,7 +39,6 @@ inputDocuments:
     type: research
 workflowType: 'architecture'
 project_name: 'AXIA ISP Management Suite'
-user_name: 'Kelvin'
 date: '2026-06-10'
 language: 'fr'
 ---
@@ -51,7 +50,7 @@ Ce document, on l'a construit ensemble, étape par étape. Chaque section reflè
 ## Méta
 
 - **Projet** : AXIA ISP Management Suite
-- **Périmètre v1** : Internet / PPPoE / RADIUS, 4 backends Splynx (XIWO, WEELAX, COQLA, GLOBALGRID)
+- **Périmètre v1** : Internet / PPPoE / RADIUS, 4 backends Splynx (Marque A, Marque B, Marque C, Marque D)
 - **Stack retenue** : Odoo 18 LTS + OCA connector + OCA queue_job + OCA keychain, PostgreSQL 15 + pg_partman, Docker on-premise, httpx custom, multi-company Odoo, audit `axia_audit_event`, WORM S3 Object Lock
 - **Inversion ownership** : Odoo génère le PPP / Splynx applique (FR-11)
 - **Langue** : français
@@ -63,7 +62,7 @@ Ce document, on l'a construit ensemble, étape par étape. Chaque section reflè
 ### Requirements Overview
 
 **Functional Requirements (83 FRs en 15 capabilities)** :
-Synchronisation client/service Splynx ↔ Odoo (CAP-1 à CAP-6), workflow impayés automatisé bout-en-bout (CAP-7 à CAP-13), administration sans code (CAP-14), audit 5 ans glissants (CAP-15). Inversion CDC v2 : Odoo génère PPP, Splynx applique (FR-11/a/b/c, FR-78a). F7 RBAC à 7 rôles + délégation partenaires (FR-77 à FR-83). Multi-sociétés natif (FR-57 à FR-61) avec 4 backends Splynx étanches (XIWO, WEELAX, COQLA, GLOBALGRID).
+Synchronisation client/service Splynx ↔ Odoo (CAP-1 à CAP-6), workflow impayés automatisé bout-en-bout (CAP-7 à CAP-13), administration sans code (CAP-14), audit 5 ans glissants (CAP-15). Inversion CDC v2 : Odoo génère PPP, Splynx applique (FR-11/a/b/c, FR-78a). F7 RBAC à 7 rôles + délégation partenaires (FR-77 à FR-83). Multi-sociétés natif (FR-57 à FR-61) avec 4 backends Splynx étanches (Marque A, Marque B, Marque C, Marque D).
 
 **Non-Functional Requirements (NFR-1 à NFR-25)** :
 
@@ -80,7 +79,7 @@ Synchronisation client/service Splynx ↔ Odoo (CAP-1 à CAP-6), workflow impay�
 - Niveau : **enterprise** (intégration critique, multi-tenant, conformité réglementaire, audit 5 ans, observabilité pionnière)
 - Domaine technique primaire : **backend / data sync / intégration**
 - Composants architecturaux estimés : **6-8 modules Odoo** (core, connector Splynx, audit, RBAC, PPP, observability, billing-workflow, admin-params)
-- Multi-marques : **4 backends Splynx étanches** (XIWO, WEELAX, COQLA, GLOBALGRID), extensible nouvelles marques sans dev
+- Multi-marques : **4 backends Splynx étanches** (Marque A, Marque B, Marque C, Marque D), extensible nouvelles marques sans dev
 
 ### Technical Constraints & Dependencies
 
@@ -394,8 +393,8 @@ CREATE TABLE axia_audit_event (
 **Ce qu'on a retenu** : un login structuré qui ne fuit pas d'information, et un mot de passe à haute entropie cryptographique. L'important, c'est que le login reste lisible pour le support technique, mais que le mot de passe soit blindé — chiffré en base, jamais loggé, jamais en clair.
 
 **Login** :
-- Format : `<marque-slug>-<base32_8chars>` (ex. `xiwo-k7m9p2qx`)
-- `marque-slug` ∈ {`xiwo`, `weelax`, `coqla`, `globalgrid`}
+- Format : `<marque-slug>-<base32_8chars>` (ex. `marque-a-k7m9p2qx`)
+- `marque-slug` ∈ {`marque-a`, `marque-b`, `marque-c`, `marque-d`}
 - Entropie : 40 bits (`secrets.token_bytes(5)` → base32 lowercase)
 - **Pre-check anti-collision** (FR-11b) : `GET admin/services/internet?login=<candidat>` avant POST ; si trouvé → régénération + retry (max 3, alerte au-delà)
 - Login en clair (identité technique, pas sensible)
@@ -452,7 +451,7 @@ CREATE TABLE axia_audit_event (
 
 #### **ADR-001 — Contrat Mapper & POC payloads Splynx (OQ-7)**
 
-**Ce qu'on a retenu** : un POC sur tenant Splynx dès le Sprint 0, couplé à une interface Mapper pluggable et versionnée. L'idée, c'est que chaque backend peut évoluer indépendamment — un mapper V1 pour XIWO, un V2 pour WEELAX — sans casser les autres.
+**Ce qu'on a retenu** : un POC sur tenant Splynx dès le Sprint 0, couplé à une interface Mapper pluggable et versionnée. L'idée, c'est que chaque backend peut évoluer indépendamment — un mapper V1 pour Marque A, un V2 pour Marque B — sans casser les autres.
 
 **Architecture Mapper** :
 
@@ -519,8 +518,8 @@ class SplynxClient:
 ```ini
 [queue_job]
 channels = root:1, \
-           root.sync.xiwo:1, root.sync.weelax:1, \
-           root.sync.coqla:1, root.sync.globalgrid:1, \
+           root.sync.marque-a:1, root.sync.marque-b:1, \
+           root.sync.marque-c:1, root.sync.marque-d:1, \
            root.webhook:5, \
            root.reconcile:1, \
            root.legacy_import:1
@@ -628,10 +627,10 @@ Format : `root.<purpose>[.<scope>]:<concurrency>`.
 
 | Channel | Usage | Concurrency |
 |---|---|---|
-| `root.sync.xiwo` | Sync XIWO | 1 (anti rate-limit) |
-| `root.sync.weelax` | Sync WEELAX | 1 |
-| `root.sync.coqla` | Sync COQLA | 1 |
-| `root.sync.globalgrid` | Sync GLOBALGRID | 1 |
+| `root.sync.marque-a` | Sync Marque A | 1 (anti rate-limit) |
+| `root.sync.marque-b` | Sync Marque B | 1 |
+| `root.sync.marque-c` | Sync Marque C | 1 |
+| `root.sync.marque-d` | Sync Marque D | 1 |
 | `root.webhook` | Webhooks entrants (toutes marques) | 5 (faible latence) |
 | `root.reconcile` | Cron horaire de réconciliation | 1 (basse prio) |
 | `root.legacy_import` | Import PPP legacy Sprint 1 | 1 (one-shot) |
@@ -713,7 +712,7 @@ Schéma standard (3 clés obligatoires + extension libre par `event_type`) :
 {
   "actor": {
     "user_id": 42,
-    "user_login": "marie@xiwo.fr",
+    "user_login": "user@example.com",
     "company_id": 1
   },
   "target": {
@@ -742,7 +741,7 @@ Schéma standard (3 clés obligatoires + extension libre par `event_type`) :
   "msg": "splynx_request",
   "correlation_id": "...",
   "company_id": 1,
-  "backend": "xiwo",
+  "backend": "marque-a",
   "endpoint": "POST admin/customers/customer",
   "duration_ms": 142,
   "status": 200
@@ -1044,7 +1043,7 @@ Odoo UI → res.partner.create(values)
 #### Flow 2 — Webhook Splynx (FR-12, CAP-6 + CAP-13)
 
 ```
-Splynx → POST /axia/webhook/xiwo (HMAC header)
+Splynx → POST /axia/webhook/marque-a (HMAC header)
        → controller webhook_splynx :
          - vérifie HMAC constant-time
          - upsert axia.webhook.inbox (UNIQUE event_id)

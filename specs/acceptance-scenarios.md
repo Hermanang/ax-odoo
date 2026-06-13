@@ -199,7 +199,7 @@ date: 2026-06-12
 
 ## 7. Cohabitation multi-société
 
-> Scénario aligné sur le contexte AXIA réel : opérateur exploitant **4 marques (XIWO, WEELAX, COQLA, GLOBALGRID)** portées par des sociétés distinctes sous propriétaire commun. Le scénario ci-dessous illustre la cohabitation sur deux sociétés représentatives ; le principe d'étanchéité s'applique identiquement aux quatre.
+> Scénario aligné sur le contexte AXIA réel : opérateur exploitant **4 marques (Marque A, Marque B, Marque C, Marque D)** portées par des sociétés distinctes sous propriétaire commun. Le scénario ci-dessous illustre la cohabitation sur deux sociétés représentatives ; le principe d'étanchéité s'applique identiquement aux quatre.
 
 **Given** une instance Odoo avec deux sociétés :
 - `S_FR_marqueA` : calendrier France métropolitaine, `block_on_saturday = True`, mode `grace_period`, nombre de jours de grâce = 15

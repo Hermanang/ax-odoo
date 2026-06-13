@@ -146,7 +146,7 @@ On considère le chantier livré quand ces 9 points sont validés :
 ### Story E4.S6 — Dashboard kanban Odoo « Santé connecteur »
 
 **As a** opérateur,
-**I want** un dashboard kanban natif dans Odoo, avec 1 carte par backend (XIWO, WEELAX, COQLA, GLOBALGRID) affichant : backlog actuel, taux d'échec sur la dernière heure, latence p95 Splynx, dernière sync OK, pourcentage de PPP legacy actifs, alertes courantes,
+**I want** un dashboard kanban natif dans Odoo, avec 1 carte par backend (Marque A, Marque B, Marque C, Marque D) affichant : backlog actuel, taux d'échec sur la dernière heure, latence p95 Splynx, dernière sync OK, pourcentage de PPP legacy actifs, alertes courantes,
 **So that** un opérateur voit la santé du système sans devoir ouvrir Grafana externe.
 
 **Effort** : 3 jours.

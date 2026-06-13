@@ -143,7 +143,7 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 
 **As a** admin fonctionnel,
 **I want** 7 rôles configurés sous forme de groupes Odoo avec record rules cross-company strictes,
-**So that** chaque utilisateur ne voit que les données de sa propre marque (XIWO/WEELAX/COQLA/GLOBALGRID) avec la visibilité métier appropriée.
+**So that** chaque utilisateur ne voit que les données de sa propre marque (Marque A/Marque B/Marque C/Marque D) avec la visibilité métier appropriée.
 
 **Référence architecture** : ADR-003 (multi-company natif).
 **Effort** : 5 jours.
@@ -151,8 +151,8 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administratif, Contentieux, Contentieux & Administratif, Responsable de marque, Direction Groupe, Administrateur Odoo.
 
 **Acceptance Criteria** :
-- **Given** 4 sociétés créées (XIWO, WEELAX, COQLA, GLOBALGRID),
-- **When** un utilisateur Commercial rattaché à XIWO interroge l'ORM (UI ou JSON-RPC direct),
+- **Given** 4 sociétés créées (Marque A, Marque B, Marque C, Marque D),
+- **When** un utilisateur Commercial rattaché à Marque A interroge l'ORM (UI ou JSON-RPC direct),
 - **Then** il ne voit **aucun** record d'une autre société, sur aucun modèle métier,
 - **And** la matrice de visibilité par champ (matrice de visibilité dans la SPEC) est respectée selon le rôle (ex. notes commerciales OK pour Commercial mais notes administratives masquées),
 - **And** la hiérarchie d'implications fonctionne (Contentieux & Administratif voit l'union de Contentieux + Administratif ; Direction Groupe a tout sauf Administrateur Odoo orthogonal),

@@ -96,7 +96,7 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **Effort** : 2 jours.
 
 **Acceptance Criteria** :
-- **Given** un backend (ex. XIWO), **When** le générateur est invoqué, **Then** le login correspond à la regex `^xiwo-[a-z2-7]{8}$`, le mot de passe à `^[A-Za-z0-9]{24}$`,
+- **Given** un backend (ex. Marque A), **When** le générateur est invoqué, **Then** le login correspond à la regex `^marque-a-[a-z2-7]{8}$`, le mot de passe à `^[A-Za-z0-9]{24}$`,
 - **And** 10 000 générations consécutives produisent ≥ 99,9 % de logins distincts (test statistique),
 - **And** l'entropie du mot de passe est ≥ 80 bits (test de Shannon),
 - **And** le service est pluggable (la stratégie de génération est configurable sans redéploiement, si Splynx impose une contrainte future).

@@ -1,6 +1,6 @@
 # AXIA ISP Management Suite
 
-Connecteur bidirectionnel **Odoo 18 LTS ↔ Splynx** pour 4 marques télécom (XIWO, WEELAX, COQLA, GLOBALGRID). Odoo devient la plateforme métier maîtresse — commercial, facturation, règles de suspension, calendaires multi-pays, audit 5 ans. Splynx reste l'exécutant technique réseau (PPPoE, RADIUS, monitoring).
+Connecteur bidirectionnel **Odoo 18 LTS ↔ Splynx** pour 4 marques télécom (Marque A, Marque B, Marque C, Marque D). Odoo devient la plateforme métier maîtresse — commercial, facturation, règles de suspension, calendaires multi-pays, audit 5 ans. Splynx reste l'exécutant technique réseau (PPPoE, RADIUS, monitoring).
 
 ---
 

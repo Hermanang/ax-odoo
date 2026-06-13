@@ -77,7 +77,7 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **Effort** : 3 jours.
 
 **Acceptance Criteria** :
-- **Given** un admin dans la société XIWO, **When** il modifie `Mode = grace_period` et sauve, **Then** la valeur est persistée pour XIWO uniquement,
+- **Given** un admin dans la société Marque A, **When** il modifie `Mode = grace_period` et sauve, **Then** la valeur est persistée pour Marque A uniquement,
 - **And** un user d'une autre société voit la valeur par défaut inchangée pour sa propre société (isolation par société),
 - **And** aucun redémarrage worker n'est nécessaire (le process worker reste up),
 - **And** la liste exhaustive des paramètres exposés correspond à celle de `admin-parameters.md` (cf. SPEC).
@@ -284,7 +284,7 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **Effort** : 2 jours.
 
 **Acceptance Criteria** :
-- **Given** `suspension_enabled = False` pour la société XIWO, **When** une suspension est due, **Then** elle n'est pas exécutée,
+- **Given** `suspension_enabled = False` pour la société Marque A, **When** une suspension est due, **Then** elle n'est pas exécutée,
 - **And** un événement d'audit `suspension.disabled_globally` est émis,
 - **And** les réactivations sur paiement continuent de fonctionner normalement,
 - **Given** le paramètre rebascule à `True`, **Then** les décisions en attente reprennent au prochain cycle d'évaluation.
