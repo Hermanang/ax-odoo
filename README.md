@@ -54,13 +54,13 @@ ax-odoo/
 
 Le projet est découpé en **5 chantiers livrés séquentiellement** :
 
-| Chantier | Objet | Stories |
-|---|---|---|
-| 0 — Fondations (Sprint 0) | Bootstrap, audit, RBAC, POC Splynx, CI | 10 |
-| 1 — Synchronisation Odoo ↔ Splynx | Connecteur bidirectionnel | 23 |
-| 2 — PPP & actions techniques | Gestion PPP + suspend/réactiver | 14 |
-| 3 — Workflow impayés & billing | Automatisation impayés multi-pays | 20 |
-| 4 — Production-ready ops | Observabilité + archivage + RGPD | 15 |
+| Chantier                          | Objet                                  | Stories |
+| --------------------------------- | -------------------------------------- | ------- |
+| 0 — Fondations (Sprint 0)         | Bootstrap, audit, RBAC, POC Splynx, CI | 10      |
+| 1 — Synchronisation Odoo ↔ Splynx | Connecteur bidirectionnel              | 23      |
+| 2 — PPP & actions techniques      | Gestion PPP + suspend/réactiver        | 14      |
+| 3 — Workflow impayés & billing    | Automatisation impayés multi-pays      | 20      |
+| 4 — Production-ready ops          | Observabilité + archivage + RGPD       | 15      |
 
 **Discipline** :
 - 1 seul chantier à la fois.
@@ -95,10 +95,4 @@ Détails complets et versions à pinner dans `brief-main.md` §3 et `architectur
 - **Aucune suppression physique** côté Splynx (résiliation = statut `terminated`).
 - **Aucun secret en clair** en base, en log, en variable d'environnement non chiffrée, ou en repo.
 
----
 
-## Contact
-
-Coordonnées du propriétaire produit et procédure de communication détaillées dans `brief-main.md` §8.
-
-Toute question de scope ou d'interprétation doit être posée en sync hebdo **avant** d'écrire la première ligne de code de la story concernée — pas d'interprétation silencieuse.
