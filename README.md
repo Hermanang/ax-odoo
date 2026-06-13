@@ -62,10 +62,6 @@ Le projet est découpé en **5 chantiers livrés séquentiellement** :
 | 3 — Workflow impayés & billing    | Automatisation impayés multi-pays      | 20      |
 | 4 — Production-ready ops          | Observabilité + archivage + RGPD       | 15      |
 
-**Discipline** :
-- 1 seul chantier à la fois.
-- Le chantier N doit être accepté et signé-off avant démarrage du chantier N+1.
-- Le brief du chantier suivant + la suite de tests d'acceptation correspondante vous sont remis après acceptation du précédent.
 
 **Tests d'acceptation** : pour chaque chantier, une suite de tests **red-phase** (initialement rouges) vous est transmise en même temps que le brief. Votre travail : implémenter le code pour que ces tests passent au vert sans modifier leurs assertions. Cette suite constitue le contrat dur de livraison.
 
@@ -83,16 +79,4 @@ Le projet est découpé en **5 chantiers livrés séquentiellement** :
 - Stockage archivage immuable (Chantier 4) : S3 + Object Lock
 
 Détails complets et versions à pinner dans `brief-main.md` §3 et `architecture.md`.
-
----
-
-## Règles principales
-
-- **Architecture figée.** Toute déviation des 10 ADR nécessite un ADR-amendment validé. Procédure documentée dans `brief-main.md` §7.
-- **Multi-company natif** (4 marques étanches), avec code agnostique au mode de cloisonnement.
-- **Audit 5 ans glissants** avec archivage immuable (S3 Object Lock WORM).
-- **Génération PPP côté Odoo** — Splynx applique (pas l'inverse).
-- **Aucune suppression physique** côté Splynx (résiliation = statut `terminated`).
-- **Aucun secret en clair** en base, en log, en variable d'environnement non chiffrée, ou en repo.
-
 
