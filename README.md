@@ -54,13 +54,13 @@ ax-odoo/
 
 Le projet est découpé en **5 chantiers livrés séquentiellement** :
 
-| Chantier | Objet | Stories | Effort estimé |
-|---|---|---|---|
-| 0 — Fondations (Sprint 0) | Bootstrap, audit, RBAC, POC Splynx, CI | 10 | ~35 j |
-| 1 — Synchronisation Odoo ↔ Splynx | Connecteur bidirectionnel | 23 | ~76 j |
-| 2 — PPP & actions techniques | Gestion PPP + suspend/réactiver | 14 | ~38 j |
-| 3 — Workflow impayés & billing | Automatisation impayés multi-pays | 20 | ~55 j |
-| 4 — Production-ready ops | Observabilité + archivage + RGPD | 15 | ~42 j |
+| Chantier | Objet | Stories |
+|---|---|---|
+| 0 — Fondations (Sprint 0) | Bootstrap, audit, RBAC, POC Splynx, CI | 10 |
+| 1 — Synchronisation Odoo ↔ Splynx | Connecteur bidirectionnel | 23 |
+| 2 — PPP & actions techniques | Gestion PPP + suspend/réactiver | 14 |
+| 3 — Workflow impayés & billing | Automatisation impayés multi-pays | 20 |
+| 4 — Production-ready ops | Observabilité + archivage + RGPD | 15 |
 
 **Discipline** :
 - 1 seul chantier à la fois.

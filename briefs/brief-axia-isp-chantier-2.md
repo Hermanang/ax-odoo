@@ -77,7 +77,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** un modèle de stockage qui pour chaque service Internet associe un login PPP (en clair, c'est un identifiant) et une référence chiffrée vers le mot de passe (jamais en clair en base),
 **So that** chaque service a son couple PPP, le mot de passe chiffré at-rest via le secret store.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un service Internet créé, **When** le code génère un PPP et stocke le mot de passe, **Then** le mot de passe est chiffré via le secret store (clé maître hors-base) et seule la référence chiffrée est en base,
@@ -93,7 +92,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **So that** l'inversion d'ownership PPP (CDC v2) est opérationnelle avec qualité cryptographique.
 
 **Référence architecture** : ADR-004 (génération PPP Odoo-owned).
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un backend (ex. Marque A), **When** le générateur est invoqué, **Then** le login correspond à la regex `^marque-a-[a-z2-7]{8}$`, le mot de passe à `^[A-Za-z0-9]{24}$`,
@@ -109,7 +107,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** qu'avant tout POST de création vers Splynx, un GET vérifie qu'aucun service existant n'utilise déjà le login candidat ; en cas de collision, régénération avec compteur borné (max 3 essais) ; au-delà, escalade pour arbitrage humain,
 **So that** le risque de doublons de login est nul.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** 3 collisions consécutives simulées, **Then** un événement d'audit `ppp.collision.unresolved` est émis (binding, motif, candidats testés),
@@ -124,7 +121,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** que la création d'un service Internet côté Odoo (déclencheur binding) génère le couple PPP **avant** le POST Splynx, de sorte que le service soit créé chez Splynx avec son PPP en un seul appel,
 **So that** Odoo génère et Splynx applique sans round-trip supplémentaire (pas de PUT ultérieur pour positionner le PPP).
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un service Internet nouveau côté Odoo, **When** le binding est créé, **Then** un binding PPP est créé dans la même transaction (`source='odoo'`),
@@ -140,7 +136,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** un bouton « Régénérer PPP » sur la fiche service qui ouvre un wizard de confirmation explicite (rupture PPPoE active à attendre),
 **So that** la rotation est tracée.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un user Commercial, **Then** le bouton « Régénérer PPP » est invisible,
@@ -157,7 +152,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** que le `Pass ppp` soit affiché masqué par défaut, et qu'un bouton « Révéler » ouvre un wizard qui demande confirmation puis affiche le clair pendant 30 secondes avant de re-masquer automatiquement,
 **So that** chaque révélation est tracée **avant** affichage.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un user Commercial, **Then** le champ `Pass ppp` est masqué et le bouton « Révéler » est invisible,
@@ -173,7 +167,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** que la matrice de visibilité matrice de visibilité dans la SPEC soit appliquée par rôle sur les champs sensibles (notes commerciales, notes administratives, notes contentieux, champs techniques PPP / SIM / WIFI / L2TP / VOIP, procédures contentieuses, adresse complète),
 **So that** un Commercial ne voit ni notes administratives ni `Pass ppp`, mais voit ses notes commerciales et les coordonnées de base.
 
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un user Commercial, **Then** les champs `notes_admin`, `notes_contentieux`, `pass_ppp`, `sim_puk`, `wifi_password`, `l2tp_secret`, `voip_password`, `procedures_contentieux` sont **absents** de la vue formulaire (filtrés par groupe),
@@ -189,7 +182,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **So that** ADR-002 (import passif) est opérationnel et la rupture PPPoE massive du parc actif est évitée (clôt OQ-15a).
 
 **Référence architecture** : ADR-002 (reprise PPP legacy).
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un tenant Splynx avec 10 000 services existants, **When** le job tourne pour ce backend, **Then** 10 000 bindings PPP sont créés avec `source='legacy'`,
@@ -207,7 +199,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **So that** un rollback de secours est possible si la bascule de propriété PPP révèle un problème non anticipé (ADR-002 — reprise PPP legacy §4).
 
 **Référence architecture** : ADR-002 (freeze baseline).
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** import legacy terminé, **When** le job snapshot tourne, **Then** un fichier chiffré est uploadé sur S3 avec Object Lock COMPLIANCE 5 ans,
@@ -222,7 +213,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** un dashboard kanban Odoo qui pour chaque backend affiche les compteurs `legacy_active`, `odoo_generated`, et leur ratio,
 **So that** je suis la décroissance attendue du parc legacy au fil du temps (rotations volontaires).
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un backend avec 8 000 legacy + 2 000 Odoo-generated, **Then** le dashboard affiche `legacy: 80 %, odoo: 20 %`,
@@ -237,7 +227,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** des actions techniques qui exécutent côté Splynx les opérations block / unblock / terminate via le client HTTP, en mode asynchrone,
 **So that** les opérations techniques sont pilotées depuis Odoo et la cohérence d'état Odoo / Splynx converge à la prochaine sync.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un service `active`, **When** un opérateur Contentieux invoque l'action `suspend`, **Then** un job est enqueué (canal critique cf. fairness §5.1 brief commun), l'appel Splynx est émis,
@@ -253,7 +242,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** que la matrice matrice de gating par rôle dans la SPEC soit appliquée server-side sur les actions techniques (Commercial : aucune ; Administratif : reactivate seulement ; Contentieux et au-dessus : suspend + reactivate ; terminate : Direction Groupe + Administrateur Odoo),
 **So that** la matrice de gating est respectée server-side, sans bypass possible via JSON-RPC.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un user Commercial, **When** il tente l'action `suspend` via JSON-RPC, **Then** `AccessError` levé, événement d'audit `role.access.denied` émis,
@@ -268,7 +256,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **I want** que si un blocage est détecté côté Splynx sans qu'un job suspension Odoo n'ait été émis dans les 60 minutes précédentes, une alerte soit levée,
 **So that** la convention (« toujours suspend/reactivate via Odoo ») est surveillée et le runbook R7 déclenché.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un service synchronisé, **When** Splynx passe en `blocked` sans qu'un job Odoo n'ait initié l'action, **Then** une alerte `manual_block_detected` est levée (notification ops),
@@ -284,7 +271,6 @@ On entre dans le vif du sujet — les 14 stories qui composent ce chantier.
 **So that** un on-call non familier peut intervenir en 15 minutes sans réveiller l'architecte.
 
 **Couvre** : convention runbooks (AR-20).
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** les deux runbooks committed dans le dossier `scripts/runbook/`, **Then** chacun couvre : contexte, symptômes, diagnostic, procédure, rollback, post-mortem checklist,

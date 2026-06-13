@@ -71,7 +71,7 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 
 ## 4. Les 23 stories
 
-> Chaque story suit le format `As a / I want / So that`, avec des ACs comportementaux en Given/When/Then, la couverture FR/NFR/ADR et l'effort. Allez, on détaille :
+> Chaque story suit le format `As a / I want / So that`, avec des ACs comportementaux en Given/When/Then. Allez, on détaille :
 
 ### Story E1.S1 — Modèle de configuration par marque
 
@@ -80,7 +80,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** chaque marque a son backend isolé configurable sans dev.
 
 **Référence architecture** : ADR-007 (authentification API Splynx).
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un admin Odoo, **When** il crée un backend rattaché à une société, **Then** le record est créé avec les références aux secrets dans le secret store,
@@ -96,7 +95,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** tous les appels Splynx sont observables et résilients (les SLAs de latence sont atteignables).
 
 **Référence architecture** : ADR-008 (client HTTP `httpx`).
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un backend configuré, **When** le code instancie le client, **Then** le token est chargé depuis le secret store à la première requête,
@@ -115,7 +113,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** le Mapper peut évoluer en v2 sans refactor du code appelant (versioning par bump majeur).
 
 **Référence architecture** : ADR-001 (contrat Mapper & POC payloads Splynx).
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un partner Odoo avec les champs identitaires standard (nom, adresse, téléphone, email, coordonnées géo, catégorie),
@@ -132,7 +129,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** une table outbox qui mémorise pour chaque opération sortante un hash du payload et la réponse cachée,
 **So that** un retry après crash worker ne crée pas de doublon côté Splynx (pas d'`Idempotency-Key` natif Splynx — R10).
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un job qui pousse un customer vers Splynx, **When** le job termine avec succès, **Then** une ligne outbox `(backend, endpoint, payload_hash, response_cached, timestamp)` est insérée **dans la même transaction**,
@@ -147,7 +143,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un modèle binding (`partner` ↔ `external_id Splynx`) + un job asynchrone de synchronisation,
 **So that** la création d'un partner éligible déclenche une création côté Splynx au prochain tick du connecteur, sans flag manuel.
 
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un partner avec au moins une commande ISP confirmée ou une souscription active (cf. règles d'éligibilité dans la SPEC), **When** le tick connecteur détecte l'éligibilité, **Then** une ligne binding est créée (sans `external_id` initial),
@@ -165,7 +160,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un champ `splynx_status` calculé sur le partner (valeurs : `not_eligible`, `eligible_pending`, `synced`, `error`), filtrable et groupable en vue liste, et un bandeau d'avertissement visible quand le partner est `eligible_pending`,
 **So that** je vois immédiatement quels clients vont impacter la licence Splynx au prochain run.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un partner sans contrat ISP ni binding, **Then** statut `not_eligible` (couleur neutre),
@@ -181,7 +175,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un bouton « Forcer création » sur la fiche partner, visible uniquement aux administrateurs Odoo, avec saisie obligatoire d'un motif (≥ 10 caractères),
 **So that** je peux pousser dans Splynx des cas exceptionnels (migration legacy, client provisionné sans vente Odoo) avec trace.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un user Commercial, **Then** le bouton est invisible,
@@ -196,7 +189,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** qu'une modification d'un champ Odoo-owned sur un partner déjà synchronisé déclenche un job de propagation vers Splynx,
 **So that** Splynx reflète la modification en ≤ 5 min p95.
 
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un partner synchronisé, **When** l'opérateur modifie un champ Odoo-owned (ex. email), **Then** le système recompute la signature du payload Mapper,
@@ -213,7 +205,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** que toute création Splynx exécute en cascade le matching niveau 1 (identifiant Splynx connu côté Odoo) puis niveau 2 (email normalisé ET mobile au format E.164) avant le POST,
 **So that** aucun doublon n'est créé en cas de migration ou de re-binding.
 
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un partner éligible dont l'identifiant Splynx est déjà connu (cas migration), **When** la cascade s'exécute, **Then** le système bascule en mise à jour (pas de POST), le binding est créé avec cet identifiant,
@@ -228,7 +219,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un niveau 3 de matching fuzzy (similarité de nom > 0.85 ET même code postal ET même pays) **désactivé par défaut**, activable par paramètre, qui bloque la création Splynx et liste le cas dans un écran « doublons potentiels » pour arbitrage manuel,
 **So that** je gère les cas ambigus sans casser la sync automatique.
 
-**Effort** : 5 jours.
 
 **Acceptance Criteria** :
 - **Given** le feature flag désactivé (défaut), **Then** le niveau 3 ne s'exécute jamais,
@@ -244,7 +234,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** qu'un cycle de sync programmé sur un client non modifié n'émette **aucun appel d'écriture** vers Splynx, vérifiable dans les métriques,
 **So that** le no-op est garanti à 100 000 abonnés (pas de DOS du tenant Splynx).
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** 1 000 partners synchronisés sans modification, **When** le tick connecteur s'exécute, **Then** **aucun** appel de mise à jour n'est émis vers Splynx (vérifié par compteur),
@@ -260,7 +249,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** la matrice d'ownership est respectée et chaque écrasement est tracé.
 
 **Couvre** : **Note** : ownership PPP traité en Chantier 2.
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un champ Odoo-owned (ex. email) divergent entre Odoo et Splynx, **When** le cycle de sync s'exécute, **Then** la valeur Odoo est poussée vers Splynx,
@@ -275,7 +263,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** que les champs Splynx-owned (état réseau temps réel : IPv4/v6, NAS, uptime) soient visuellement marqués lecture seule dans l'UI Odoo,
 **So that** je ne tente pas de modifier des valeurs qui seront écrasées au prochain cycle.
 
-**Effort** : 1 jour.
 
 **Acceptance Criteria** :
 - **Given** la vue formulaire d'un service Internet, **Then** les champs Splynx-owned sont affichés en lecture seule avec un indicateur visuel,
@@ -290,7 +277,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un binding pour le service Internet (analogue au binding customer) avec sync à Splynx,
 **So that** un service Internet créé dans Odoo (après validation contrat) apparaît dans Splynx avec ses attributs techniques (sauf PPP, qui arrive en Chantier 2).
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un service Internet Odoo lié à un customer synchronisé, **When** le tick connecteur détecte le nouveau service, **Then** un binding est créé,
@@ -306,7 +292,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** Splynx peut notifier Odoo des changements (état réseau, paiement, statut) avec sécurité forte.
 
 **Référence architecture** : ADR-006 (sécurité webhooks Splynx).
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un POST sur le controller webhook avec body JSON et en-tête de signature, **When** le controller traite la requête,
@@ -325,7 +310,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un job asynchrone qui consomme l'inbox webhook et dispatche par type d'événement (customer modifié → sync inverse, statut service modifié → mise à jour binding, paiement reçu → trigger réactivation préparé pour Chantier 3),
 **So that** le controller webhook répond immédiatement et le traitement réel est asynchrone, tracé, observable.
 
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** une ligne inbox non traitée, **When** le job tourne, **Then** le handler enregistré pour ce type d'événement est appelé,
@@ -341,7 +325,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un cron horaire qui pour chaque backend récupère la liste paginée des customers Splynx modifiés depuis le dernier run et compare avec l'état Odoo,
 **So that** les webhooks perdus silencieusement sont détectés et rattrapés en < 1 h.
 
-**Effort** : 5 jours.
 
 **Acceptance Criteria** :
 - **Given** le cron horaire, **When** il s'exécute, **Then** pour chaque backend, la liste des customers Splynx modifiés depuis le dernier run est récupérée (avec pagination ; fallback `id BETWEEN` si Splynx n'expose pas de filtre `updated_since` natif — OQ-3),
@@ -358,7 +341,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** que la fiche service Internet affiche l'état réseau temps réel (statut RADIUS, IPv4/v6, NAS, uptime) avec horodatage et indicateur de fraîcheur (vert ≤ 5 min, attention 5-30 min, alerte > 30 min),
 **So that** je résous 95 % de mes tickets sans ouvrir Splynx.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un service avec dernière mise à jour il y a 2 min, **Then** indicateur vert, affichage « il y a 2 min »,
@@ -374,7 +356,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** la machine d états des statuts contractuels est conforme et le scénario d'acceptance §15 (cf. SPEC) est satisfait.
 
 **Couvre** : **Réf** : `service-states.md`.
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un service en statut `inactive`, **When** Odoo tente une transition `inactive` → `active`, **Then** la transition est refusée avec un message clair (un service résilié doit passer par un nouveau cycle `new`),
@@ -390,7 +371,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** qu'un changement de statut technique Splynx (ex. action manuelle d'un agent réseau) déclenche un webhook traité par Odoo qui met à jour le statut côté Odoo selon ownership et lève une alerte si l'écart est sémantiquement significatif,
 **So that** la remontée des statuts Splynx vers Odoo est correcte et l'asymétrie blocage manuel est détectée.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un service Splynx passe en `blocked` suite à une action manuelle (pas Odoo), **When** le webhook est reçu et traité, **Then** le statut Odoo est mis à jour,
@@ -405,7 +385,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **I want** un rapport quotidien automatique listant les partners avec contrat ISP actif sans binding Splynx (faux négatifs) ET les bindings Splynx sans contrat ISP actif Odoo (faux positifs), avec alerte email si au moins un cas est trouvé,
 **So that** je détecte les désynchros silencieuses.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** 3 partners éligibles sans binding, **When** le cron quotidien tourne, **Then** un rapport est généré listant les 3 cas,
@@ -420,7 +399,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** la fairness multi-tenant et la priorité asymétrique sont respectées.
 
 **Référence architecture** : ADR-009 (fairness queue multi-tenant).
-**Effort** : 1 jour.
 
 **Acceptance Criteria** :
 - **Given** la configuration choisie par votre équipe, documentée dans `architecture.md` (cf. note §5.1 brief commun), **When** Odoo démarre, **Then** chaque société dispose d'un channel isolé pour ses syncs,
@@ -437,7 +415,6 @@ Le chantier est bon pour le sign-off **uniquement si** ces 8 conditions sont rem
 **So that** le SLA Chantier 1 est démontré avant le handoff au Chantier 2.
 
 **Couvre** : §15.1, §15.6.
-**Effort** : 5 jours.
 
 **Acceptance Criteria** :
 - **Given** une instance de test avec 4 backends configurés (HTTP mockés à partir des golden files), **When** la suite E2E tourne, **Then** les 5 sous-scénarios §15.1 passent (prospect, vente confirmée, force creation, tentative non-admin, rapport divergence),

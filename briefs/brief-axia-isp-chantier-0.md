@@ -56,7 +56,7 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 
 ## 4. Les 10 stories
 
-> Format light : `As a / I want / So that` + ACs comportementaux Given/When/Then + couverture FR/NFR/ADR + effort. L'implémentation (noms de classes, méthodes, fichiers internes) est à ta discrétion — seul le comportement observable est contractuel.
+> Format light : `As a / I want / So that` + ACs comportementaux Given/When/Then. L'implémentation (noms de classes, méthodes, fichiers internes) est à ta discrétion — seul le comportement observable est contractuel.
 
 ### Story E0.S1 — Bootstrap repo & stack reproductible
 
@@ -65,7 +65,6 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 **So that** un dev nouveau-arrivant obtient une instance saine en moins de 15 minutes.
 
 **Couvre** : Conventions §4 et §5 du brief commun.
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un poste de dev avec Docker installé,
@@ -84,7 +83,6 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 **So that** la consultation chaude reste performante et l'archivage froid est faisable.
 
 **Référence architecture** : ADR-005 (schéma audit & partitionnement).
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** l'installation fraîche du module audit,
@@ -103,7 +101,6 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 **So that** tout chemin de code mutatoire est tracé de manière homogène.
 
 **Référence architecture** : ADR-005 (schéma audit & partitionnement), conventions §5 brief commun.
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** un module consommateur intégrant l'API audit fournie,
@@ -126,7 +123,6 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 **So that** aucun chemin de code ne peut émettre un événement non déclaré (mode pionnier, anti-drift).
 
 **Couvre** : Convention §5.1 du brief commun (format event_type).
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** le module audit installé,
@@ -146,7 +142,6 @@ Le chantier est accepté **uniquement si** les 6 critères suivants sont tous au
 **So that** chaque utilisateur ne voit que les données de sa propre marque (Marque A/Marque B/Marque C/Marque D) avec la visibilité métier appropriée.
 
 **Référence architecture** : ADR-003 (multi-company natif).
-**Effort** : 5 jours.
 
 Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administratif, Contentieux, Contentieux & Administratif, Responsable de marque, Direction Groupe, Administrateur Odoo.
 
@@ -167,7 +162,6 @@ Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administra
 **So that** le bypass via JSON-RPC est bloqué ET le scan détecte tout oubli de gating sur une méthode sensible.
 
 **Couvre** : **Conventions** : §5.1 brief commun.
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** une méthode publique d'action sensible gated par rôle,
@@ -188,7 +182,6 @@ Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administra
 **So that** je peux **prouver à 100 %** qu'aucune fuite multi-tenant n'existe (R13, ADR-003 — multi-company natif).
 
 **Référence architecture** : ADR-003 (multi-company natif).
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** une instance peuplée avec 4 sociétés + démo data réaliste (≥ 10 partners + 5 événements d'audit par société),
@@ -209,7 +202,6 @@ Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administra
 **So that** le contrat Mapper du Chantier 1 repose sur des données réelles et non sur des suppositions (clôt OQ-7).
 
 **Référence architecture** : ADR-001 (contrat Mapper & POC payloads Splynx).
-**Effort** : 5 jours (incluant accès tenants + capture + documentation).
 
 **Acceptance Criteria** :
 - **Given** les 4 tenants Splynx accessibles avec compte API dédié (cf. §8.2 brief commun),
@@ -231,7 +223,6 @@ Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administra
 **So that** dès le bootstrap (avant la première feature qui consommera un token).
 
 **Référence architecture** : ADR-007 (auth API), ADR-004 (PPP).
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** une instance avec la clé maître du secret store positionnée en variable d'environnement,
@@ -251,7 +242,6 @@ Les 7 rôles (hiérarchie d'implications cf. PRD §3.7) : Commercial, Administra
 **So that** chaque PR est validée automatiquement et un tag de release produit une image déployable.
 
 **Couvre** : Discipline tests + CI (§6 brief commun).
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** une PR poussée,

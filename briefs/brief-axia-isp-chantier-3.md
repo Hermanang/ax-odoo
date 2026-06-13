@@ -74,7 +74,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un modèle d'extension de la configuration Odoo qui expose **par société** tous les paramètres métier listés dans `admin-parameters.md` (mode, délais, calendaires, options de réactivation, etc.),
 **So that** un admin fonctionnel peut éditer toutes ces valeurs depuis l'UI sans intervention dev, et la modification prend effet au prochain cycle sans redémarrage.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un admin dans la société Marque A, **When** il modifie `Mode = grace_period` et sauve, **Then** la valeur est persistée pour Marque A uniquement,
@@ -90,7 +89,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** que chaque modification d'un paramètre admin génère un événement d'audit (paramètre, ancienne valeur, nouvelle valeur, auteur, horodatage),
 **So that** la traçabilité 5 ans est garantie sur la configuration métier.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** `Mode = delayed` et un admin le change en `grace_period`, **When** il sauve, **Then** un événement d'audit `admin.parameter.changed` est émis avec le delta complet `{paramètre, ancienne, nouvelle}`,
@@ -104,7 +102,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** chaque paramètre accompagné d'une étiquette en français + tooltip clair expliquant son effet métier + validation à la saisie (entier ≥ 0, sélection bornée, date future pour les champs de report),
 **So that** une saisie invalide affiche un message d'erreur clair sans sauvegarder.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** un admin saisit `suspension_delay_value = -3`, **Then** erreur affichée « Le délai doit être ≥ 0 », pas de sauvegarde,
@@ -118,7 +115,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** que l'écran paramètres affiche un aperçu de l'effet attendu après modification (ex. « avec ces paramètres, une facture détectée en retard aujourd'hui sera suspendue le {date calculée} »),
 **So that** je valide mes choix avant de sauver.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** mode `delayed`, délai 15 jours, calendrier FR métropole, **When** l'admin modifie le délai à 8 jours, **Then** le label d'aperçu affiche immédiatement la nouvelle date calculée (ex. « Facture détectée le 10 juin 2026 → suspension prévue le 18 juin, ajustée au prochain jour autorisé selon le calendrier »).
@@ -131,7 +127,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** qu'à l'installation, les paramètres aient les valeurs par défaut suivantes (cf. `admin-parameters.md`) : mode `delayed`, délai 15 jours calendaires, période de grâce désactivée, blocage les jours fériés activé, blocage les samedis activé, réactivation 24/7 activée, fuzzy dedup désactivé,
 **So that** la configuration par défaut est immédiatement conforme aux usages métier français.
 
-**Effort** : 1 jour.
 
 **Acceptance Criteria** :
 - **Given** installation fraîche d'une société, **Then** les 13 valeurs par défaut listées dans `admin-parameters.md` sont positionnées correctement (test exhaustif sur chaque clé).
@@ -144,7 +139,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un service qui pour un triplet `(date, pays, subdivision)` retourne un booléen « jour férié » + le nom du jour férié, couvrant **FR métropole, Guadeloupe (971), Martinique (972), Guyane (973), Saint-Martin (MF), Saint-Barthélemy (BL), Mali (ML), Sénégal (SN)**,
 **So that** le moteur de suspension peut décider du report selon le calendrier local du client.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** date 27 mai 2026 et subdivision Guadeloupe (971), **When** la fonction est appelée, **Then** retourne `True` avec nom « Abolition de l'esclavage »,
@@ -159,7 +153,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un cron qui toutes les 15 minutes scanne les factures atteignant le statut configuré comme déclencheur (`overdue_invoice_status`, défaut `late`) et émet un événement par facture éligible nouvellement détectée,
 **So that** la latence détection → décision est < 15 min et la détection est idempotente.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** une facture bascule en `late` à 14h00, **When** le cron tourne à 14h15, **Then** un événement `invoice.overdue.detected` est émis pour cette facture, et une entrée de décision est créée (statut « en attente d'évaluation »),
@@ -173,7 +166,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un service qui évalue chaque décision en attente selon l'un des 3 modes paramétrés (`immediate`, `delayed`, `grace_period`) et calcule la date prévue de suspension,
 **So that** un changement de mode prend effet au prochain cycle sans redéploiement.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** mode `delayed`, délai 15 jours, facture détectée le 1er juin, **Then** date prévue = 16 juin (jours calendaires, pas ouvrés),
@@ -189,7 +181,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** qu'avant l'exécution d'une suspension, un service vérifie si la date calculée tombe samedi / dimanche / férié selon les paramètres et le pays du client, et la reporte au **prochain jour autorisé** avec audit du motif,
 **So that** les obligations réglementaires multi-pays sont respectées et le scénario Guadeloupe 27 mai passe.
 
-**Effort** : 4 jours.
 
 **Acceptance Criteria** :
 - **Given** une suspension calculée le 27 mai 2026 pour un client Guadeloupe, **When** le service applique les règles calendaires, **Then** la suspension est reportée au 28 mai,
@@ -205,7 +196,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un champ `cutoff_postponed_until` sur la fiche client qui désactive l'évaluation des règles automatiques tant que la date est dans le futur, et reprend automatiquement à expiration,
 **So that** je peux geler manuellement un cas particulier sans toucher aux paramètres globaux.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un client avec `cutoff_postponed_until = 2026-06-15`, **When** le cron tourne entre aujourd'hui et le 14 juin, **Then** un événement `invoice.overdue.detected` est tout de même émis (visibilité), la décision est marquée « reportée manuellement », **aucune suspension** n'est planifiée,
@@ -219,7 +209,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un job qui à la date prévue exécute l'action `suspend` côté connecteur (livré en Chantier 2), met à jour le statut Odoo, et journalise,
 **So that** la latence suspension après éligibilité validée est ≤ 5 min p95.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** une décision arrivée à sa date prévue, **When** le job tourne sur un canal de queue à priorité haute (cf. fairness §5.1 brief commun), **Then** l'action `suspend` côté connecteur est appelée,
@@ -235,7 +224,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un déclencheur sur paiement (`account.payment` à l'état posté) qui pour les clients suspendus avec leur facture régularisée, enqueue immédiatement un job de réactivation sur un canal de queue à priorité haute, **24 heures sur 24 et 7 jours sur 7**,
 **So that** la latence réactivation après paiement est ≤ 5 min p95 et la cible best-in-class FR est atteinte.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un client suspendu et un paiement reçu un samedi à 22h, **When** le paiement est posté, **Then** un job de réactivation est enqueué immédiatement,
@@ -252,7 +240,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** que si les paramètres `activation_allowed_weekend = False` ou `activation_on_holidays = False` sont positionnés, les réactivations soient reportées au prochain jour ouvré local avec audit,
 **So that** les opérateurs avec un choix conservateur (pas d'opération hors heures ouvrées) sont supportés.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** `activation_allowed_weekend = False` et un paiement reçu samedi, **When** la réactivation est évaluée, **Then** elle est reportée au lundi à 08h,
@@ -266,7 +253,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** que si une facture éligible à suspension est régularisée (payée, annulée, modifiée) avant l'exécution de la suspension, le job en attente soit annulé et un événement émis,
 **So that** aucun client qui a déjà payé n'est suspendu (cohérence métier critique).
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** une suspension prévue à J+10 et un paiement reçu à J+5, **When** le paiement est posté, **Then** la décision en attente passe à l'état « annulée »,
@@ -281,7 +267,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un paramètre `suspension_enabled = False` qui désactive globalement toutes les suspensions automatiques (les réactivations restent actives),
 **So that** je peux gérer une crise opérationnelle (panne réseau, maintenance majeure) sans intervention dev.
 
-**Effort** : 2 jours.
 
 **Acceptance Criteria** :
 - **Given** `suspension_enabled = False` pour la société Marque A, **When** une suspension est due, **Then** elle n'est pas exécutée,
@@ -297,7 +282,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** que pour un client donné, l'historique d'audit puisse reconstituer la **chaîne complète** d'un cycle d'impayé (`invoice.overdue.detected` → `suspension.scheduled` → `suspension.postponed.calendar` ou report manuel → `suspension.executed` ou `cancelled` → `payment.received` → `reactivation.executed`) avec le contexte décisionnel pour chaque étape,
 **So that** la re-jouabilité réglementaire est garantie et le debug d'une réclamation client se fait en quelques minutes.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - **Given** un cycle complet exécuté, **When** un opérateur ouvre la vue « Chronologie audit client », **Then** la chaîne d'événements est visible avec un `correlation_id` constant,
@@ -311,7 +295,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un test E2E qui reproduit le scénario PRD §15.3 (client Guadeloupe, facture impayée, calcul de suspension tombant sur le 27 mai férié, reportée au 28 mai) sur instance de test,
 **So that** la dimension calendaires multi-pays est démontrée avant handoff.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - Le test passe end-to-end avec assertions strictes sur les événements émis (`suspension.postponed.calendar` avec motif `holiday` et pays `971`) et les dates calculées (initiale = 27 mai, reprogrammée = 28 mai).
@@ -324,7 +307,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un test E2E qui reproduit le scénario PRD §15.2 (client Mali, mode `grace_period` 10 jours, cycle complet J → J+10 suspension → paiement J+11 → réactivation),
 **So that** le workflow E2E est démontré avec les latences mesurées sous cibles.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - Le test passe avec des latences mesurées inférieures aux cibles (≤ 5 min p95 pour la suspension et pour la réactivation après paiement).
@@ -337,7 +319,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** un test E2E qui démontre que la société FR (mode `grace_period` 15 jours, blocage le samedi activé) et la société SN (mode `immediate`) coexistent **sans contamination**,
 **So that** l'isolation multi-société est démontrée bout-en-bout sur le workflow billing.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - Un user de la société FR ne voit aucun client SN (vérifié UI + JSON-RPC),
@@ -352,7 +333,6 @@ C'est dense mais tout est là — chaque brique du workflow a sa story.
 **I want** deux tests E2E reproduisant les scénarios PRD §15.4 (réactivation un samedi à 22h) et §15.5 (le report manuel prime sur les règles auto, et l'évaluation reprend à expiration),
 **So that** la couverture des flux billing critiques est complète.
 
-**Effort** : 3 jours.
 
 **Acceptance Criteria** :
 - Les deux tests passent avec des assertions complètes sur les événements émis et les latences.
